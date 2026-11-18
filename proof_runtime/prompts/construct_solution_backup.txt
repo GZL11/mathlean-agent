@@ -1,0 +1,169 @@
+# Task: Construct Complete Lean Proof Solution
+
+You are tasked with completing the proofs for each step in the generated Lean proof files.
+
+## Input
+- A temp folder containing:
+  - `definition.lean`: Definitions and helper lemmas
+  - `step_1.lean`, `step_2.lean`, ..., `step_n.lean`: Proof steps with `sorry` placeholders
+
+## Goal
+Replace all `sorry` placeholders with complete, verified proofs.
+
+## MCP Tools to Use
+
+**CRITICAL**: Use these Lean MCP tools extensively throughout the proving process:
+
+### 1. Search Tools (Use BEFORE writing proofs)
+
+- **`mcp__lean-lsp__lean_leandex`**: Semantic search for theorems
+  - Example: "For any real numbers a and b, |a + b| ≤ |a| + |b|"
+  - Use to find relevant Mathlib theorems
+
+- **`mcp__lean-lsp__lean_loogle`**: Type-based search
+  - Example: `|?a + ?b| ≤ |?a| + |?b|`
+  - Find theorems by their type signature
+
+- **`mcp__lean-lsp__lean_leanfinder`**: Proof state search
+  - Example: "I have a goal |a + b| ≤ |a| + |b| for real numbers a and b"
+  - Get suggestions for current proof state
+
+- **`mcp__lean-lsp__lean_local_search`**: Verify declarations
+  - Example: "abs_add"
+  - Confirm theorem names exist in current workspace
+  - remember to input the project_path
+
+### 2. Development Tools (Use WHILE writing proofs)
+
+- **`mcp__lean-lsp__lean_goal`**: Check proof state
+  - **USE THIS CONSTANTLY** after each tactic
+  - Args: `file_path`, `line`, `column`
+  - Shows current goals and context
+
+- **`mcp__lean-lsp__lean_diagnostic_messages`**: Get all errors/warnings
+  - Args: `file_path`
+  - **Check after every edit** to catch errors early
+
+- **`mcp__lean-lsp__lean_hover_info`**: Get documentation
+  - Args: `file_path`, `line`, `column`
+  - Hover over tactics, theorems, or symbols for info
+
+- **`mcp__lean-lsp__lean_term_goal`**: Get expected type
+  - Args: `file_path`, `line`, `column`
+  - Useful when filling in term-mode proofs
+
+### 3. Advanced Tools (Use when stuck)
+
+- **`mcp__lean-lsp__lean_completions`**: Get available completions
+  - Args: `file_path`, `line`, `column`
+  - See what tactics/theorems are available at cursor
+
+- **`mcp__lean-lsp__lean_multi_attempt`**: Try multiple tactics
+  - Args: `file_path`, `line`, `snippets` (list of alternatives)
+  - Compare different approaches quickly
+
+- **`mcp__lean-lsp__lean_state_search`**: Search based on current proof state
+  - Args: `file_path`, `line`, `column`
+  - Find theorems relevant to your current goal
+
+- **`mcp__lean-lsp__lean_hammer_premise`**: Get premise suggestions
+  - Args: `file_path`, `line`, `column`
+  - Automated theorem suggestions for current state
+
+### 4. External Help (Use as last resort)
+
+- **`mcp__lean-lsp__discussion_partner`**: Ask Gemini for advice
+  - Args: `question`, `model` ("gemini" or "gpt")
+  - Discuss proof strategies or get unstuck
+
+- **`mcp__lean-lsp__gemini_informal_prover`**: Get informal solution
+  - Args: `math_problem`
+  - Get step-by-step informal proof to formalize
+
+## Workflow
+
+### For Each Step File:
+
+1. **Read and Understand**:
+   ```
+   Read step_i.lean to understand the theorem statement
+   ```
+
+2. **Search for Existing Theorems**:
+   ```
+   Use lean_leandex, lean_loogle, or lean_leanfinder to find relevant Mathlib theorems
+   Use lean_local_search to verify theorem names
+   ```
+
+3. **Draft the Proof**:
+   ```
+   Replace sorry with initial proof attempt
+   Use tactics like: intro, apply, exact, rw, simp, ring, linarith, etc.
+   ```
+
+4. **Check Goals Iteratively**:
+   ```
+   After EACH line of the proof:
+   - Use lean_goal to see remaining goals
+   - Use lean_diagnostic_messages to check for errors
+   - Adjust tactics based on feedback
+   ```
+
+5. **Refine Until Complete**:
+   ```
+   If stuck:
+   - Use lean_completions to see available options
+   - Use lean_multi_attempt to try multiple tactics
+   - Use lean_state_search for relevant theorems
+   - Use discussion_partner if completely stuck
+   ```
+
+6. **Final Verification**:
+   ```
+   Use lean_diagnostic_messages to ensure no errors
+   Ensure no sorry remains
+   ```
+
+## Common Proof Tactics
+
+- `intro` / `intros`: Introduce hypotheses
+- `apply`: Apply a theorem
+- `exact`: Provide exact proof term
+- `rw` / `rewrite`: Rewrite using equality
+- `simp`: Simplify using simp lemmas
+- `ring`: Solve ring equations
+- `linarith`: Linear arithmetic solver
+- `norm_num`: Normalize numeric expressions
+- `cases`: Case split
+- `induction`: Induction
+- `have`: Introduce intermediate result
+- `calc`: Chain of equalities/inequalities
+
+## Example Workflow
+
+```lean
+-- Before:
+theorem step_1 (a b : ℝ) : |a + b| ≤ |a| + |b| := by
+  sorry
+
+-- After searching with lean_loogle "|_ + _| ≤ |_| + |_|"
+-- Found: abs_add : |a + b| ≤ |a| + |b|
+
+-- Complete proof:
+theorem step_1 (a b : ℝ) : |a + b| ≤ |a| + |b| := by
+  exact abs_add a b
+```
+
+## Important Notes
+
+1. **Always use lean_goal** after each tactic to verify progress
+2. **Check diagnostics frequently** to catch errors early
+3. **Search before implementing** - Mathlib likely has what you need
+4. **Work step-by-step** - one tactic at a time, checking after each
+5. **Build the project** if you add new imports: `mcp__lean-lsp__lean_build`
+
+## Success Criteria
+- All `sorry` placeholders replaced with complete proofs
+- All files compile without errors
+- Proofs are clean and use appropriate Mathlib theorems
+- Each step builds correctly on previous steps

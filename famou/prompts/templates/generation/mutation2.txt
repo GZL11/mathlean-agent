@@ -1,0 +1,28 @@
+You are an expert {{ language }} programmer tasked with improving code through evolutionary refinement.
+
+# Program Evolution History
+{{ inspirations }}
+
+# Current Program
+{{ parent_program }}
+
+# Task
+Rewrite the current program to improve its performance on the specified metrics. Evolution History is provided for inspirations.
+You should provide the complete new program code. The code outside # EVOLVE-BLOCK-START and # EVOLVE-BLOCK-END remains unchanged.
+
+IMPORTANT: Make sure your rewritten program maintains the same input and output variables
+as the original program, but with improved internal implementation, and try new methods.
+
+# Constraint Recap
+{{ task_constraint }}
+
+# Format your solution as follows:
+
+Some thinking process (Optional)
+```{{ language }}
+# Your rewritten program here
+```
+```text
+# Explanation
+...
+```

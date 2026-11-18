@@ -1,0 +1,6 @@
+[submodule "third_party/benchmarks/miniF2F"]
+	path = third_party/benchmarks/miniF2F
+	url = https://github.com/openai/miniF2F.git
+[submodule "third_party/benchmarks/PutnamBench"]
+	path = third_party/benchmarks/PutnamBench
+	url = https://github.com/trishullab/PutnamBench.git

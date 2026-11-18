@@ -1,0 +1,104 @@
+You are repairing one subgoal inside a fixed structured Lean proof plan.
+
+Target theorem:
+{{ theorem_statement }}
+
+Task constraints:
+{{ task_constraint }}
+
+Frozen parent plan:
+```yaml
+{{ frozen_plan }}
+```
+
+Fixed topology signature:
+{{ topology_signature }}
+
+Selected subgoal:
+- node_id: {{ selected_node_id }}
+- statement_formal: {{ selected_statement }}
+- status: {{ selected_status }}
+- proof_sketch: {{ selected_proof_sketch }}
+- local_lean_draft: {{ selected_local_lean_draft }}
+- last_diagnostic: {{ selected_last_diagnostic }}
+
+Recent attempt history:
+{{ recent_attempt_history }}
+
+Sticky repair note:
+{{ sticky_repair_note }}
+
+Repeated failure note:
+{{ repeated_failure_note }}
+
+Dependency context:
+{{ dependency_context }}
+
+Local lemmas:
+{{ local_lemmas }}
+
+Current frontier nodes:
+{{ frontier_nodes }}
+
+Current blocked nodes:
+{{ blocked_nodes }}
+
+Recommended repair agenda:
+{{ repair_agenda }}
+
+Parent experience memory:
+{{ parent_experiences }}
+
+Global subgoal memories:
+{{ global_subgoal_memories }}
+
+Global lemma memories:
+{{ global_lemma_memories }}
+
+Return exactly one JSON object describing a repair patch for the selected node.
+
+Requirements:
+1. You must only repair the selected subgoal `{{ selected_node_id }}`.
+2. Do not change theorem statement, strategy type, subgoal ids, or dependencies.
+3. The patch may update:
+   - `updated_proof_sketch`
+   - `updated_local_lean_draft`
+   - `updated_status`
+   - `verifier_state_update`
+   - `introduced_lemmas`
+   - `retrieved_lemma_ids`
+   - `retrieved_experience_ids`
+   - `last_diagnostic`
+   - `repair_summary`
+4. `introduced_lemmas` must contain local reusable lemmas only. Do not restate the whole theorem.
+5. Keep Lean drafts local to the selected node whenever possible.
+6. Prefer producing a meaningful compilable draft over adding many lemmas.
+7. Reuse successful lemma memories when they match the selected node's assumptions and target.
+8. Treat failed lemma memories as negative evidence and avoid repeating their diagnosed errors.
+9. If the repeated-failure note is non-empty, change the local tactic instead of rephrasing the same broken draft.
+10. If the sticky repair note is non-empty, prioritize continuing the current node over inventing unrelated new structure.
+
+JSON schema example:
+```json
+{
+  "node_id": "{{ selected_node_id }}",
+  "updated_proof_sketch": "Use the dependency context to discharge the goal.",
+  "updated_local_lean_draft": "by\n  intro h\n  exact h",
+  "updated_status": "in_progress",
+  "verifier_state_update": {
+    "repair_mode": "local_draft"
+  },
+  "introduced_lemmas": [
+    {
+      "lemma_id": "lemma_local_1",
+      "statement_formal": "A -> B",
+      "proof_status": "attempted",
+      "source_node_ids": ["{{ selected_node_id }}"]
+    }
+  ],
+  "retrieved_lemma_ids": ["lemma_x"],
+  "retrieved_experience_ids": ["exp_y"],
+  "last_diagnostic": "remaining goal is a straightforward rewrite",
+  "repair_summary": "Added a first local Lean draft and one helper lemma."
+}
+```

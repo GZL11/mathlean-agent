@@ -1,0 +1,13 @@
+plan_id: seed_identity_namespace
+theorem_statement: "P → P"
+plan_summary: "Direct identity proof inside a namespace-scoped Lean scaffold."
+strategy_type: direct
+subgoals:
+  - id: sg_goal
+    statement: "P → P"
+    proof_sketch: "Introduce the hypothesis and return it immediately."
+    status: in_progress
+    local_lean_draft: |
+      by
+        intro h
+        exact h

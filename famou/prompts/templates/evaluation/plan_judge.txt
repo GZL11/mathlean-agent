@@ -1,0 +1,28 @@
+You are reviewing a structured formal-proof plan.
+
+Task constraints:
+{{ task_constraint }}
+
+Parent plan:
+```yaml
+{{ parent_plan }}
+```
+
+Current plan:
+```yaml
+{{ current_plan }}
+```
+
+Evaluation metrics:
+{{ evaluation_metrics | format_metrics }}
+
+Error info:
+{{ error_info }}
+
+Return JSON only with keys:
+- change_summary
+- strengths
+- weaknesses
+- next_actions
+
+Each value should be concise. `next_actions` should be a list of short strings.

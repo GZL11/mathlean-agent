@@ -1,0 +1,9 @@
+plan_id: seed_and_left
+theorem_statement: "P ∧ Q → P"
+plan_summary: "Start from the conjunction-elimination idea, but leave the Lean step unfinished."
+strategy_type: direct
+subgoals:
+  - id: sg_goal
+    statement: "P ∧ Q → P"
+    proof_sketch: "Introduce the conjunction hypothesis, unpack it, and return the left component."
+    status: in_progress

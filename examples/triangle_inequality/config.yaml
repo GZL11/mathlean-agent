@@ -1,0 +1,117 @@
+# Triangle Inequality Lean Example Configuration
+
+experiment:
+  name: triangle_inequality
+  task_description: examples/triangle_inequality/problem.lean
+  task_constraint: |
+    ### Output Format: .scratch File
+
+    **CRITICAL**: Your output must be a plain text `.scratch` file containing an **informal proof outline** that will be parsed by Claude Code to generate formal Lean 4 proof steps.
+
+    ### Purpose
+    The .scratch file serves as a bridge between high-level mathematical reasoning and formal Lean code. Claude Code will:
+    1. Parse your informal outline
+    2. Generate structured Lean files: `definition.lean`, `step_1.lean`, `step_2.lean`, etc.
+    3. Complete the formal proofs using Lean MCP tools
+    4. Verify the complete proof chain
+
+    ### Required .scratch File Structure
+
+    Your .scratch file MUST contain these sections:
+
+    #### 1. **Theorem Statement** (mandatory)
+    - Clearly state what needs to be proved in natural language
+    - Include all hypotheses and the conclusion
+    - Use standard mathematical notation
+
+    #### 2. **Proof Strategy** (mandatory)
+    - Describe the overall proof approach in 2-4 sentences
+    - Mention the high-level technique but NOT the detailed solution
+
+    #### 3. **Proof Steps** (mandatory, 3-10 steps recommended)
+    - Break the proof into sequential, numbered steps
+    - Each step must include:
+      * Step number
+      * Claim/Goal
+      * Approach/Justification
+
+    #### 4. **Definitions** (optional)
+    - List any custom definitions needed
+    - If no custom definitions needed, state: "No custom definitions needed"
+
+    ### Accepted Format Style
+
+    ```text
+    # Theorem Statement
+    [Your theorem in natural language]
+
+    # Proof Strategy
+    [Your approach]
+
+    ## Step 1: [Title]
+    - Claim: [What to prove]
+    - Methods: [How to prove it]
+    ```
+
+    ### Important Notes
+
+    - This is an informal proof outline, not Lean code
+    - Focus on mathematical logic and reasoning
+    - Claude Code will handle Lean syntax and theorem search
+    - The theorem to prove is specified in the `task_description` file
+
+  language: scratch
+  strategy: random
+  max_iterations: 10
+  max_workers: 1
+  checkpoint_interval: 10
+  seed: 42
+
+  island:
+    num_islands: 1
+    island_size: 20
+    migration_interval: 100
+    migration_size: 1
+    migration_topology: ring
+
+infrastructure:
+  llm:
+    provider: openai
+    api_base: "https://your-openai-compatible-endpoint/v1"
+    api_key: "REPLACE_ME"
+    model: "gemini-3-flash-preview"
+    temperature: 1
+    max_tokens: 64000
+    timeout: 3600
+
+  storage:
+    type: local
+    base_path: ./famou_data
+
+  logger:
+    type: local
+    level: INFO
+    file_enabled: true
+
+  env:
+    type: local
+    timeout: 30
+
+  embedding:
+    provider: openai
+    api_key: "REPLACE_ME"
+    model: "qwen3-embedding-4b"
+    api_base: "https://qianfan.baidubce.com/v2"
+
+modules:
+  generate:
+    language: scratch
+    template_program: "base/program.txt"
+    template_generate: "generation/mutation2.txt"
+  evaluate:
+    language: scratch
+
+problem:
+  timeout_construct: 300
+  timeout_verify: 180
+  project_path: "../../proof_runtime/project"

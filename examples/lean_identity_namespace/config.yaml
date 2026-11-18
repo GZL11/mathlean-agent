@@ -1,0 +1,59 @@
+experiment:
+  name: lean_identity_namespace
+  task_description: examples/lean_identity_namespace/problem.lean
+  task_constraint: |
+    Output a structured YAML proof plan for the given Lean theorem.
+
+    Requirements:
+    - Keep the theorem target unchanged.
+    - Maintain an acyclic subgoal DAG.
+    - Prefer 1 to 4 subgoals.
+    - Include a concise `proof_sketch` for each frontier node.
+    - Include `local_lean_draft` whenever you can produce a concrete Lean step.
+    - Do not emit markdown fences.
+    - Do not use `sorry`.
+  language: lean
+  strategy: mathproof_plan_island
+  max_iterations: 3
+  max_workers: 1
+  checkpoint_interval: 3
+  seed: 42
+  island:
+    num_islands: 1
+    island_size: 4
+    migration_interval: 50
+    migration_size: 1
+    migration_topology: ring
+
+infrastructure:
+  llm:
+    provider: openai
+    api_base: https://qianfan.baidubce.com/v2
+    model: deepseek-v3.2
+    api_key: "REPLACE_ME"  # fill with your key
+    temperature: 0.7
+    max_tokens: 4000
+    timeout: 120
+  storage:
+    type: local
+    base_path: ./famou_data
+  logger:
+    type: local
+    level: INFO
+    file_enabled: true
+  env:
+    type: local
+    timeout: 30
+
+modules:
+  generate:
+    language: lean
+    local_island_budget: 1
+    local_island_return_mode: best
+    local_island_stop_on_solved: true
+  evaluate:
+    language: lean
+  judge:
+    use_llm: false
+
+problem: {}

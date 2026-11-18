@@ -1,0 +1,27 @@
+# Theorem Statement
+For any two real numbers a and b, prove that the absolute value of their sum is at most the sum of their absolute values: |a + b| <= |a| + |b|.
+
+# Proof Strategy
+Use the standard absolute value triangle inequality from Mathlib rather than reproving the result from first principles. The proof can be organized by first identifying the exact theorem name, then instantiating it for real numbers a and b, and finally packaging the result in the target theorem statement.
+
+## Step 1: Find the library theorem
+- Claim: There is already a Mathlib theorem stating the triangle inequality for absolute values on real numbers or absolute values in linear ordered rings.
+- Methods: Search Mathlib for lemmas about abs and addition, especially names involving abs_add or abs_add_le_abs_add_abs.
+
+## Step 2: Specialize the theorem to the current variables
+- Claim: After choosing the appropriate imported theorem, applying it to a and b yields a proof of |a + b| <= |a| + |b|.
+- Methods: Use the theorem directly with the current variables, checking whether the theorem is already exactly in the required form or needs only a trivial specialization.
+
+## Step 3: State the final Lean theorem
+- Claim: The theorem real_abs_triangle_ineq follows immediately from the specialized Mathlib result.
+- Methods: Write the Lean theorem with the required signature, import only the relevant Mathlib modules, and finish the proof without introducing sorry except where the workflow explicitly requests placeholders.
+
+# Definitions
+No custom definitions needed.
+
+
+evolve + mathproof agent(0-1) + exerience
+instruction -> eva(cc->step plan -> step lean -> lean mcp eva -> evolve) -> 
+gsmk8k(ORM, format + acc reward)
+PRM: (LLM-judge), split -> step (judge)
+ins

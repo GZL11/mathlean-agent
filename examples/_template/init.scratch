@@ -1,0 +1,20 @@
+# Theorem Statement
+Replace this section with the natural-language statement of your theorem.
+
+# Proof Strategy
+Describe the high-level strategy in 2-4 sentences.
+
+## Step 1: Identify the key theorem
+- Claim: State the first sub-goal.
+- Methods: Describe how to establish it.
+
+## Step 2: Specialize or transform
+- Claim: State the next sub-goal.
+- Methods: Describe how it follows from Step 1.
+
+## Step 3: Finish the target theorem
+- Claim: State the final theorem.
+- Methods: Explain how the previous steps complete the proof.
+
+# Definitions
+No custom definitions needed.

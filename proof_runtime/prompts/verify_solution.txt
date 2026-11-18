@@ -1,0 +1,167 @@
+# Task: Verify Complete Lean Proof Solution
+
+You are tasked with verifying that all proof steps are complete, correct, and properly integrated.
+
+## Input
+- A temp folder containing:
+  - `definition.lean`: Definitions and helper lemmas
+  - `step_1.lean`, `step_2.lean`, ..., `step_n.lean`: Completed proof steps
+
+## Goal
+Verify that all proofs are complete, compile without errors, and form a coherent proof chain.
+
+## MCP Tools to Use
+
+**CRITICAL**: Use these Lean MCP tools to verify the solution:
+
+### 1. Diagnostic Tools (Primary verification)
+
+- **`mcp__lean-lsp__lean_diagnostic_messages`**: Get all errors/warnings
+  - Args: `file_path`
+  - **MUST USE** for every .lean file
+  - Returns all compilation errors, warnings, and info messages
+  - No errors = proof is valid
+
+### 2. Goal Verification
+
+- **`mcp__lean-lsp__lean_goal`**: Check for remaining goals
+  - Args: `file_path`, `line`, `column`
+  - Verify no `sorry` placeholders remain
+  - Check that proofs are complete (no unsolved goals)
+
+### 3. Building and Testing
+
+- **`mcp__lean-lsp__lean_build`**: Build the Lean project
+  - Optional args: `lean_project_path`, `clean`
+  - Use to rebuild if new imports were added
+  - Verifies everything compiles together
+
+### 4. Code Inspection
+
+- **`mcp__lean-lsp__lean_file_outline`**: Get file structure
+  - Args: `file_path`
+  - Verify all expected theorems/lemmas are present
+  - Check for completeness
+
+- **`mcp__lean-lsp__lean_hover_info`**: Inspect declarations
+  - Args: `file_path`, `line`, `column`
+  - Verify theorem types match expectations
+
+## Verification Workflow
+
+### Step 1: Check Each File Individually
+
+For each `.lean` file in the temp folder:
+
+```
+1. Use lean_diagnostic_messages to check for errors
+2. If errors found, note them for reporting
+3. Use lean_file_outline to verify structure
+4. Check that no `sorry` keywords remain
+```
+
+### Step 2: Verify No Remaining Sorries
+
+```
+1. Read each step_*.lean file
+2. Search for "sorry" keyword
+3. If found, mark as incomplete
+```
+
+### Step 3: Check Coherence
+
+```
+1. Verify step_1.lean, step_2.lean, ... are sequential
+2. Check that each step builds on previous ones
+3. Verify definitions.lean is properly imported if needed
+```
+
+### Step 4: Build Verification (Optional but Recommended)
+
+```
+1. If project_path is available, use lean_build
+2. This verifies all files compile together
+3. Catches import errors and dependency issues
+```
+
+## Verification Checks
+
+### ✓ Success Criteria:
+- [ ] All `.lean` files have zero errors (lean_diagnostic_messages)
+- [ ] No `sorry` keywords in any file
+- [ ] All step files are numbered sequentially (step_1, step_2, ...)
+- [ ] Each file has proper `import Mathlib` statement
+- [ ] All theorems have complete proofs
+- [ ] File structure matches expected format
+
+### ✗ Failure Conditions:
+- Any compilation errors
+- `sorry` placeholders remain
+- Missing step files in sequence
+- Import errors
+- Type errors
+- Unsolved goals
+
+## Example Verification Process
+
+```python
+# For step_1.lean:
+1. lean_diagnostic_messages("step_1.lean")
+   → Result: [] (no errors) ✓
+
+2. Read file content
+   → Check: No "sorry" keyword ✓
+
+3. lean_file_outline("step_1.lean")
+   → Verify: Contains expected theorem ✓
+
+# Repeat for all step files...
+
+# Final check:
+lean_build() if needed
+→ Result: Success ✓
+```
+
+## Output Metrics
+
+The verification should produce:
+
+```python
+{
+    "total_steps": <number of step files>,
+    "verified_steps": <number with no errors>,
+    "failed_steps": [
+        {
+            "file": "step_i.lean",
+            "error": "<error message>"
+        },
+        ...
+    ],
+    "verification_time": <seconds>,
+    "has_sorry": <true/false>,
+    "all_files_valid": <true/false>
+}
+```
+
+## Error Reporting
+
+If verification fails, report:
+1. **Which files** have errors
+2. **What errors** were found (from diagnostics)
+3. **Missing steps** if sequence is incomplete
+4. **Remaining sorries** if any exist
+
+## Important Notes
+
+1. **Use lean_diagnostic_messages** as the primary verification tool
+2. **Check EVERY file** - don't skip any
+3. **No errors = valid proof** - Lean's type checker is authoritative
+4. **Build the project** if adding new imports or definitions
+5. **Be thorough** - this is the final quality check
+
+## Success Criteria
+- All files compile without errors
+- No `sorry` placeholders remain
+- Proper file structure and naming
+- Sequential step numbering
+- Complete proof chain from step 1 to final step

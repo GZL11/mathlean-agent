@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "numina-lean-agent"
+version = "0.1.0"
+
+[tool.setuptools]
+packages = ["numina_lean_agent", "numina_lean_agent.scripts"]
+package-dir = {"numina_lean_agent.scripts" = "scripts", "numina_lean_agent" = "."}
+

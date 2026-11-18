@@ -1,0 +1,99 @@
+# Task: Generate Lean Proof Steps from Scratch File
+
+You are tasked with parsing a `.scratch` file (plain text proof outline) and generating structured Lean 4 proof steps (only steps, without actually proving).
+
+## Input
+- A `.scratch` file containing an informal proof outline or strategy
+- The file may contain natural language descriptions, mathematical notation, or pseudo-code
+
+## Output Structure
+Generate the following files in the temp folder:
+
+1. **`definition.lean`**: Contains all necessary definitions, structures, or helper lemmas
+   - Should define any custom types, functions, or intermediate results needed
+
+2. **`step_1.lean`, `step_2.lean`, ..., `step_n.lean`**: Individual proof steps
+   - Each file represents one logical step in the proof
+   - Each step should contain a theorem or lemma with a clear statement
+   - Do not generate proof body, only generate proof steps. Use `sorry` as placeholder for the proof body (will be filled later)
+   - Steps should be sequential and build upon each other
+
+## MCP Tools to Use
+
+**CRITICAL**: Use the following Lean MCP tools to assist you:
+
+1. **`mcp__lean-lsp__lean_leandex`**: Search for relevant theorems semantically
+   - Query: Natural language description of what you need
+   - Example: "triangle inequality for real numbers"
+
+2. **`mcp__lean-lsp__lean_loogle`**: Search by type signature or pattern
+   - Query: Type patterns like `_ + _ ≤ _ + _`
+   - Useful for finding exact theorems
+
+3. **`mcp__lean-lsp__lean_leanfinder`**: Semantic search for proof states
+   - Query: Mathematical concepts or proof states
+   - Helps find relevant Mathlib theorems
+
+4. **`mcp__lean-lsp__lean_local_search`**: Verify declarations exist
+   - Query: Theorem/definition names, and remember to input the project path
+   - Prevents hallucinating APIs
+
+5. **`mcp__lean-lsp__lean_hover_info`**: Get documentation for syntax
+   - Use to understand Lean syntax and available functions
+
+## Guidelines
+
+1. **Parse the Scratch File Carefully**:
+   - Identify the main theorem statement
+   - Break down the proof into logical sub-goals
+   - Each step should prove one clear intermediate result
+
+2. **Use Mathlib Theorems**:
+   - Search for existing theorems before defining new ones
+   - Prefer standard Mathlib results over custom definitions
+   - Must use specific imports instead of `import Mathlib`
+
+3. **Maintain Coherence**:
+   - Each step should logically connect to the next
+   - Clearly state assumptions and conclusions
+   - Use descriptive names for theorems and lemmas
+
+4. **Lean 4 Syntax**:
+   - Use modern Lean 4 syntax (not Lean 3)
+   - Follow Mathlib4 naming conventions
+   - Use proper type signatures
+
+5. **Handle Edge Cases**:
+   - If the scratch file is empty or invalid, create a single step with a basic theorem
+   - If unclear, break the proof into smaller, safer steps
+
+## Example Output Structure
+
+### definition.lean
+```lean
+-- Any custom definitions needed for the proof
+```
+
+### step_1.lean
+```lean
+import Mathlib.<specific import>
+
+/-- First step: establish basic property -/
+theorem step_1_result (a b : ℝ) : a ≤ a + b ∨ b ≤ a + b := by
+  sorry
+```
+
+### step_2.lean
+```lean
+import Mathlib.<specific import>
+
+/-- Second step: apply triangle inequality -/
+theorem step_2_result (a b : ℝ) : |a + b| ≤ |a| + |b| := by
+  sorry
+```
+
+## Success Criteria
+- All generated .lean files have valid Lean 4 syntax
+- Files are numbered sequentially (step_1.lean, step_2.lean, ...)
+- Each step builds toward the final proof goal
+- Theorem statements are clear and well-documented

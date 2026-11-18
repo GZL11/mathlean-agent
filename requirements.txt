@@ -1,0 +1,14 @@
+hatchling>=1.18.0
+build>=1.0.3
+pytest
+mock
+-e .
+pydantic>=2.0.0
+openai>=1.0.0
+rich>=13.0.0
+pyyaml>=6.0
+tenacity>=8.0.0
+jinja2>=3.0.0
+numpy>=1.24.0
+fire>=0.7.0
+-e third_party/numina-lean-agent

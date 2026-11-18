@@ -1,0 +1,69 @@
+# Replace `template_problem` and the file paths below when copying this template.
+
+experiment:
+  name: template_problem
+  task_description: examples/_template/problem.lean
+  task_constraint: |
+    ### Output Format: .scratch File
+
+    Your output must be a plain text `.scratch` file with:
+    - Theorem Statement
+    - Proof Strategy
+    - 3-10 numbered Proof Steps
+    - Optional Definitions
+
+  language: scratch
+  strategy: random
+  max_iterations: 10
+  max_workers: 1
+  checkpoint_interval: 10
+  seed: 42
+
+  island:
+    num_islands: 1
+    island_size: 20
+    migration_interval: 100
+    migration_size: 1
+    migration_topology: ring
+
+infrastructure:
+  llm:
+    provider: openai
+    api_base: "https://your-openai-compatible-endpoint/v1"
+    api_key: "REPLACE_ME"
+    model: "gemini-3-flash-preview"
+    temperature: 1
+    max_tokens: 64000
+    timeout: 3600
+
+  storage:
+    type: local
+    base_path: ./famou_data
+
+  logger:
+    type: local
+    level: INFO
+    file_enabled: true
+
+  env:
+    type: local
+    timeout: 30
+
+  embedding:
+    provider: openai
+    api_key: "REPLACE_ME"
+    model: "qwen3-embedding-4b"
+    api_base: "https://qianfan.baidubce.com/v2"
+
+modules:
+  generate:
+    language: scratch
+    template_program: "base/program.txt"
+    template_generate: "generation/mutation2.txt"
+  evaluate:
+    language: scratch
+
+problem:
+  timeout_construct: 300
+  timeout_verify: 180
+  project_path: "../../proof_runtime/project"

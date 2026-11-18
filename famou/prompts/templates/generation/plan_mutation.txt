@@ -1,0 +1,102 @@
+You are evolving a structured proof plan for a formal mathematics task.
+
+Target theorem:
+{{ theorem_statement }}
+
+Task constraints:
+{{ task_constraint }}
+
+Current parent plan:
+```yaml
+{{ parent_plan }}
+```
+
+Parent search score:
+{{ parent_score | default("N/A") }}
+
+Parent success score:
+{{ parent_success_score | default("N/A") }}
+
+Parent metrics:
+{{ parent_metrics | format_metrics }}
+
+Parent judge feedback:
+{{ parent_feedback | format_metrics }}
+
+Recommended mutation agenda:
+{{ repair_agenda }}
+
+Parent experience memory:
+{{ parent_experiences }}
+
+Island specialization directive:
+{{ island_specialization_directive }}
+
+Replanning directive:
+{{ replanning_directive }}
+
+Crossover directive:
+{{ crossover_directive }}
+
+Global theorem memories:
+{{ global_theorem_memories }}
+
+Global lemma memories:
+{{ global_lemma_memories }}
+
+Inspirations from other plans:
+{{ inspirations }}
+
+Experiences from inspiration plans:
+{{ inspiration_experiences }}
+
+Return exactly one improved proof plan as a single fenced YAML block.
+
+Requirements:
+1. Keep the top-level theorem aligned with the target theorem.
+2. Maintain an acyclic `subgoals` dependency graph.
+3. Each subgoal must have:
+   - `id`
+   - `statement`
+   - optional `dependencies`
+   - optional `proof_sketch`
+   - optional `local_lean_draft`
+   - optional `status`
+4. Every subgoal `statement` must be a formal Lean goal or proposition, not a natural-language instruction like "Introduce ..." or "Extract ...".
+5. If a node is meant to represent a proof step, encode the actual formal target in `statement`, and put the informal explanation only in `proof_sketch`.
+6. If you add lemmas, place them under `lemmas` with `statement` and `status`.
+7. Whenever possible, include a short but meaningful `local_lean_draft` for the frontier or repaired subgoals.
+8. Each `local_lean_draft` must be locally checkable for that node: either
+   - a full Lean declaration matching the node statement, or
+   - a tactic body that closes exactly that node's formal statement.
+9. Do not split variable introduction across nodes in a way that leaves later nodes referring to out-of-scope names such as `h`, `ha`, or `hb` without reintroducing them.
+10. Do not output global Lean proof code outside subgoal / lemma drafts.
+11. Use the experience memory to avoid repeating known failure patterns and to reuse successful lemma memories or repair hints when relevant.
+12. Treat the recommended mutation agenda as the default operating mode unless there is a clear structural reason to deviate.
+13. Treat failed lemma memories as negative evidence: use their diagnostics to avoid repeating the same broken proof pattern.
+14. Reuse retrieved global theorem memories or lemma memories only when they clearly match the current theorem, but do not blindly copy mismatched statements.
+15. Treat the island specialization directive as a soft outer-search prior: it can bias refinement, replanning, or crossover, but verifier evidence still has priority.
+16. If the replanning directive says `replan_from_memory`, you may replace the parent's subgoal decomposition with a fresh plan; otherwise prefer refining the current decomposition.
+17. In `replan_from_memory` mode, prefer fewer, more formal subgoals with executable Lean drafts over verbose decomposition text.
+18. Prefer improving frontier nodes or repairing blocked nodes over adding many new nodes.
+19. If the crossover directive says `crossover_with_inspirations`, merge only compatible structure from the selected inspirations, such as a better decomposition, a cleaner verified lemma, or a more promising formal subgoal statement.
+20. In crossover mode, do not blindly concatenate subgoal DAGs from multiple parents; keep one coherent acyclic plan for the same target theorem.
+
+Output schema example:
+```yaml
+plan_id: plan_x
+theorem_statement: ...
+plan_summary: ...
+strategy_type: decomposition-first
+sketch: ...
+subgoals:
+  - id: sg1
+    statement: ...
+    dependencies: []
+    proof_sketch: ...
+    local_lean_draft: |
+      theorem sg1 : ... := by
+        sorry
+    status: pending
+lemmas: []
+```
