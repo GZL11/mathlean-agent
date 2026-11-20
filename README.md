@@ -480,4 +480,5 @@ bash proof_runtime/setup.sh project
 如需维护或扩展本仓库，建议优先阅读：
 
 - `README.md`
+- `docs/mathproof/current_codebase_status_and_runtime.md`
 - `examples/_template/`
